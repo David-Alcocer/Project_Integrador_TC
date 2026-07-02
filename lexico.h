@@ -9,12 +9,31 @@ typedef enum {
 	TOKEN_DIV,
 	TOKEN_LPAREN,
 	TOKEN_RPAREN,
-	TOKEN_EOF
+	TOKEN_EOF,
+	TOKEN_BEGIN,
+	TOKEN_END,
+	TOKEN_IF,
+	TOKEN_ELSE,
+	TOKEN_WHILE,
+	TOKEN_PRINT,
+	TOKEN_ASSIGN,
+	TOKEN_LT,
+	TOKEN_GT,
+	TOKEN_EQ,
+	TOKEN_LBRACE,
+	TOKEN_RBRACE,
+	TOKEN_SEMICOLON,
+	TOKEN_ID,
+	TOKEN_STRING 
+
+
+
 } TokenType;
 
 typedef struct {
 	TokenType type;
-	int value;
+	char lexeme[64];
+	int line;
 } Token;
 
 
