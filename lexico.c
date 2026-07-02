@@ -82,6 +82,27 @@ Token getNextToken()
 		}else{
 			return (Token){TOKEN_ASSIGN, "", 0};
 		}
+
+		case '"':
+		{
+			char lexeme[64];
+			int i = 0;
+
+			while(input[pos] != '"' && input[pos] != '\0'){
+				lexeme[i] = input[pos];
+				pos++;
+				i++;
+			}
+
+			lexeme[i] = '\0';
+			pos++;
+			Token t;
+            t.type = TOKEN_STRING;
+            strcpy(t.lexeme, lexeme);
+            t.line = 0;
+            return t;
+
+		}
 		
 		default:
 			printf("Caracter invalido: %c ", c);
