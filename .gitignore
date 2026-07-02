@@ -1,0 +1,4 @@
+minilang
+minilang.dSYM/
+*.o
+.DS_Store
