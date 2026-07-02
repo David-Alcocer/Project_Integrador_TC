@@ -69,6 +69,19 @@ Token getNextToken()
 		case '/': return (Token){TOKEN_DIV, "",0};
 		case '(': return (Token){TOKEN_LPAREN, "",0};
 		case ')': return (Token){TOKEN_RPAREN, "",0};
+		case '{': return (Token){TOKEN_LBRACE, "", 0};
+		case '}': return (Token){TOKEN_RBRACE, "", 0};
+		case ';': return (Token){TOKEN_SEMICOLON, "", 0};
+		case '<': return (Token){TOKEN_LT, "", 0};
+		case '>': return (Token){TOKEN_GT, "", 0};
+
+		case '=':
+		if(input[pos] == '='){
+			pos++;
+			return (Token){TOKEN_EQ, "", 0};
+		}else{
+			return (Token){TOKEN_ASSIGN, "", 0};
+		}
 		
 		default:
 			printf("Caracter invalido: %c ", c);
