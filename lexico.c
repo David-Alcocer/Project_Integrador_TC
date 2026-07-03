@@ -5,17 +5,19 @@
 
 char *input;
 int pos = 0;
+int line = 1;
 
 Token getNextToken()
 {
-	while(input[pos] == ' ')
+	while(input[pos] == ' '){
 		pos++;
-	
-	while(input[pos] == '\n')
+	}
+	while(input[pos] == '\n'){
 		pos++;
-	
+		line++;
+	}
 	if(input[pos] == '\0')
-		return (Token){TOKEN_EOF, "", 0};
+		return (Token){TOKEN_EOF, "", line};
 		
 	if(isdigit(input[pos]))
 		{
@@ -27,7 +29,7 @@ Token getNextToken()
 				pos++;
 			}
 			
-			return (Token){TOKEN_NUMBER,"", 0};
+			return (Token){TOKEN_NUMBER,"", line};
 		}
 		if(isalpha(input[pos]) || input[pos] == '_'){
 			char lexeme[64];
@@ -53,7 +55,7 @@ Token getNextToken()
 		Token t;
 		t.type = type;
 		strcpy(t.lexeme, lexeme);
-		t.line = 0;
+		t.line = line;
 		return t;
 
 	}
@@ -63,24 +65,24 @@ Token getNextToken()
 		
 		switch(c)
 		{
-		case '+': return (Token){TOKEN_PLUS, "",0};
-		case '-': return (Token){TOKEN_MINUS, "",0};
-		case '*': return (Token){TOKEN_MULT, "",0};
-		case '/': return (Token){TOKEN_DIV, "",0};
-		case '(': return (Token){TOKEN_LPAREN, "",0};
-		case ')': return (Token){TOKEN_RPAREN, "",0};
-		case '{': return (Token){TOKEN_LBRACE, "", 0};
-		case '}': return (Token){TOKEN_RBRACE, "", 0};
-		case ';': return (Token){TOKEN_SEMICOLON, "", 0};
-		case '<': return (Token){TOKEN_LT, "", 0};
-		case '>': return (Token){TOKEN_GT, "", 0};
+		case '+': return (Token){TOKEN_PLUS, "",line};
+		case '-': return (Token){TOKEN_MINUS, "",line};
+		case '*': return (Token){TOKEN_MULT, "",line};
+		case '/': return (Token){TOKEN_DIV, "",line};
+		case '(': return (Token){TOKEN_LPAREN, "",line};
+		case ')': return (Token){TOKEN_RPAREN, "",line};
+		case '{': return (Token){TOKEN_LBRACE, "", line};
+		case '}': return (Token){TOKEN_RBRACE, "", line};
+		case ';': return (Token){TOKEN_SEMICOLON, "", line};
+		case '<': return (Token){TOKEN_LT, "", line};
+		case '>': return (Token){TOKEN_GT, "", line};
 
 		case '=':
 		if(input[pos] == '='){
 			pos++;
-			return (Token){TOKEN_EQ, "", 0};
+			return (Token){TOKEN_EQ, "", line};
 		}else{
-			return (Token){TOKEN_ASSIGN, "", 0};
+			return (Token){TOKEN_ASSIGN, "", line};
 		}
 
 		case '"':
@@ -99,14 +101,14 @@ Token getNextToken()
 			Token t;
             t.type = TOKEN_STRING;
             strcpy(t.lexeme, lexeme);
-            t.line = 0;
+            t.line = line;
             return t;
 
 		}
 		
 		default:
 			printf("Caracter invalido: %c ", c);
-			return (Token){TOKEN_EOF, "",0};
+			return (Token){TOKEN_EOF, "",line};
 		}
 
 
