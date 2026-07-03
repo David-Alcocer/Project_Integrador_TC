@@ -3,6 +3,8 @@
 #include "lexico.h"
 #include "sintactico.h"
 
+extern Token current;
+
 int main(int argc, char *argv[])
 {
 
@@ -18,28 +20,17 @@ int main(int argc, char *argv[])
 	{
 		return 1;
 	}
+    
+	setInput(archivo);
+	current = getNextToken();
 
-	fseek(archivo, 0, SEEK_END);
-	long tam = ftell(archivo);
-	fseek(archivo, 0, SEEK_SET);
-
-	char *buffer = malloc(tam + 1);
-
-	if (buffer == NULL)
-	{
-		printf("No hay memoria\n");
-		return 1;
-	}
-
-	fread(buffer, 1, tam, archivo);
-	buffer[tam] = '\0';
-	fclose(archivo);
-
-	input = buffer;
-	pos = 0;
-	parse();
-
-	free(buffer);
-
-	return 0;
+    programa();
+	 if (current.type == TOKEN_EOF){
+	 printf("Programa correcto\n");
+	 }
+	 else {
+		printf("Error en el archivo\n");
+	 }
+	 fclose(archivo);
+	 	return 0;
 }

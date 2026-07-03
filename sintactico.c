@@ -19,84 +19,42 @@ void match(TokenType expected)
 		error();
 }
 
-void E();
-void EPrime();
-void T();
-void TPrime();
-void F();
-
-void E()
+void programa()
 {
-	T();
-	EPrime();
+	match(TOKEN_BEGIN);
+	lista_sentencias();
+	match(TOKEN_END);
 }
 
-void EPrime()
+void lista_sentencias()
 {
-	if(current.type == TOKEN_PLUS)
+	while(current.type == TOKEN_ID||current.type == TOKEN_IF || 
+		current.type == TOKEN_WHILE|| current.type == TOKEN_PRINT)
 	{
-		match(TOKEN_PLUS);
-		T();
-		EPrime();
-	}
-	else if(current.type == TOKEN_MINUS)
-	{
-		match(TOKEN_MINUS);
-		T();
-		EPrime();
+		sentencia();
 	}
 }
 
-void T()
+void sentencia()
 {
-	F();
-	TPrime();
-}
+	switch(current.type){
+		case TOKEN_ID:
+		asignacion();
+		break;
 
-void TPrime()
-{
-	if(current.type == TOKEN_MULT)
-	{
-		match(TOKEN_MULT);
-		F();
-		TPrime();
-	}
-	else if(current.type == TOKEN_DIV)
-	{
-		match(TOKEN_DIV);
-		F();
-		TPrime();
-	}
-}
+		case TOKEN_IF:
+		sentencia_if();
+		break;
 
-void F()
-{
-	if(current.type == TOKEN_NUMBER)
-	{
-		match(TOKEN_NUMBER);
-	}
-	else if(current.type == TOKEN_LPAREN)
-	{
-		match(TOKEN_LPAREN);
-		
-		E();
-		
-		match(TOKEN_RPAREN);
-	}
-	else
-	{
+		case TOKEN_WHILE:
+		sentencia_while();
+		break;
+
+		case TOKEN_PRINT:
+	    sentencia_print();
+		break;
+
+		default:
 		error();
 	}
-}
-
-void parse()
-{
-	current = getNextToken();
-	
-	E();
-	
-	if(current.type == TOKEN_EOF)
-		printf("Cadena valida\n");
-	else
-		error();
 }
