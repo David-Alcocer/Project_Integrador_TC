@@ -1,18 +1,45 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include "lexico.h"
 #include "sintactico.h"
 
-int main()
+int main(int argc, char *argv[])
 {
-	char expr[256];
-	
-	printf("Ingrese expresion: ");
-	fgets(expr, sizeof(expr), stdin);
-	
-	input = expr;
+
+	if (argc < 2)
+	{
+		printf("Uso: ./minilang archivo.mini\n");
+		return 1;
+	}
+
+	FILE *archivo = fopen(argv[1], "r");
+
+	if (archivo == NULL)
+	{
+		return 1;
+	}
+
+	fseek(archivo, 0, SEEK_END);
+	long tam = ftell(archivo);
+	fseek(archivo, 0, SEEK_SET);
+
+	char *buffer = malloc(tam + 1);
+
+	if (buffer == NULL)
+	{
+		printf("No hay memoria\n");
+		return 1;
+	}
+
+	fread(buffer, 1, tam, archivo);
+	buffer[tam] = '\0';
+	fclose(archivo);
+
+	input = buffer;
 	pos = 0;
-	
 	parse();
-	
+
+	free(buffer);
+
 	return 0;
 }
