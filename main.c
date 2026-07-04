@@ -4,33 +4,37 @@
 #include "sintactico.h"
 
 extern Token current;
+void parse();
 
 int main(int argc, char *argv[])
 {
+    if (argc < 2) {
+        printf("Uso: ./minilang archivo.mini\n");
+        return 1;
+    }
 
-	if (argc < 2)
-	{
-		printf("Uso: ./minilang archivo.mini\n");
-		return 1;
-	}
+    FILE *archivo = fopen(argv[1], "r");
+    if (archivo == NULL) {
+        printf("No se pudo abrir el archivo\n");
+        return 1;
+    }
 
-	FILE *archivo = fopen(argv[1], "r");
-
-	if (archivo == NULL)
-	{
-		return 1;
-	}
     
-	setInput(archivo);
-	current = getNextToken();
+    fseek(archivo, 0, SEEK_END);
+    long tam = ftell(archivo);
+    fseek(archivo, 0, SEEK_SET);
 
-    programa();
-	 if (current.type == TOKEN_EOF){
-	 printf("Programa correcto\n");
-	 }
-	 else {
-		printf("Error en el archivo\n");
-	 }
-	 fclose(archivo);
-	 	return 0;
+    char *buffer = malloc(tam + 1);
+    fread(buffer, 1, tam, archivo);
+    buffer[tam] = '\0';
+    fclose(archivo);
+    
+    input = buffer;
+    pos = 0;
+
+	parse();
+
+
+    free(buffer);
+    return 0;
 }

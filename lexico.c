@@ -16,53 +16,30 @@ Token getNextToken()
 		pos++;
 		line++;
 	}
+
 	if(input[pos] == '\0')
 		return (Token){TOKEN_EOF, "", line};
-		
-	if(isalpha(input[pos]) || input[pos] == '_')
-		{
-			while(isalnum(input[pos]) || input[pos] == '_')
-				pos++;
 
-				return (Token){TOKEN_ID, 0};
-		}
-	if (input[pos] == '"')
-	{
-		pos++;
-
-		while(input[pos] != '"' && input[pos] != '\0')
-		pos++;
-
-		if(input[pos] == '"')
-		pos++;
-
-		else{
-
-			printf("ERROR: Cadena sin cerrar\n");
-			return (Token){TOKEN_EOF, 0};
-		}
-		
-		return (Token){TOKEN_STRING, 0};
-		
-	}
 	if(isdigit(input[pos]))
+	{
+		int value = 0;
+
+		while(isdigit(input[pos]))
 		{
-			int value = 0;
-			
-			while(isdigit(input[pos]))
-			{
-				value = value * 10 + (input[pos] - '0');
-				pos++;
-			}
-			
-			return (Token){TOKEN_NUMBER,"", line};
+			value = value * 10 + (input[pos] - '0');
+			pos++;
 		}
-		if(isalpha(input[pos]) || input[pos] == '_'){
-			char lexeme[64];
-		
+
+		return (Token){TOKEN_NUMBER, "", line};
+	}
+
+	if(isalpha(input[pos]) || input[pos] == '_')
+	{
+		char lexeme[64];
 		int i = 0;
 
-		while(isalnum(input[pos])){ //isalnum -> si la función del lenguaje es alfanúmerico 
+		while(isalnum(input[pos]) || input[pos] == '_')
+		{
 			lexeme[i] = input[pos];
 			i++;
 			pos++;
@@ -83,27 +60,25 @@ Token getNextToken()
 		strcpy(t.lexeme, lexeme);
 		t.line = line;
 		return t;
-
 	}
 
-		
-		char c = input[pos++];
-		
-		switch(c)
-		{
-		case '+': return (Token){TOKEN_PLUS, "",line};
-		case '-': return (Token){TOKEN_MINUS, "",line};
-		case '*': return (Token){TOKEN_MULT, "",line};
-		case '/': return (Token){TOKEN_DIV, "",line};
-		case '(': return (Token){TOKEN_LPAREN, "",line};
-		case ')': return (Token){TOKEN_RPAREN, "",line};
-		case '{': return (Token){TOKEN_LBRACE, "", line};
-		case '}': return (Token){TOKEN_RBRACE, "", line};
-		case ';': return (Token){TOKEN_SEMICOLON, "", line};
-		case '<': return (Token){TOKEN_LT, "", line};
-		case '>': return (Token){TOKEN_GT, "", line};
+	char c = input[pos++];
 
-		case '=':
+	switch(c)
+	{
+	case '+': return (Token){TOKEN_PLUS, "", line};
+	case '-': return (Token){TOKEN_MINUS, "", line};
+	case '*': return (Token){TOKEN_MULT, "", line};
+	case '/': return (Token){TOKEN_DIV, "", line};
+	case '(': return (Token){TOKEN_LPAREN, "", line};
+	case ')': return (Token){TOKEN_RPAREN, "", line};
+	case '{': return (Token){TOKEN_LBRACE, "", line};
+	case '}': return (Token){TOKEN_RBRACE, "", line};
+	case ';': return (Token){TOKEN_SEMICOLON, "", line};
+	case '<': return (Token){TOKEN_LT, "", line};
+	case '>': return (Token){TOKEN_GT, "", line};
+
+	case '=':
 		if(input[pos] == '='){
 			pos++;
 			return (Token){TOKEN_EQ, "", line};
@@ -111,32 +86,28 @@ Token getNextToken()
 			return (Token){TOKEN_ASSIGN, "", line};
 		}
 
-		case '"':
-		{
-			char lexeme[64];
-			int i = 0;
+	case '"':
+	{
+		char lexeme[64];
+		int i = 0;
 
-			while(input[pos] != '"' && input[pos] != '\0'){
-				lexeme[i] = input[pos];
-				pos++;
-				i++;
-			}
-
-			lexeme[i] = '\0';
+		while(input[pos] != '"' && input[pos] != '\0'){
+			lexeme[i] = input[pos];
 			pos++;
-			Token t;
-            t.type = TOKEN_STRING;
-            strcpy(t.lexeme, lexeme);
-            t.line = line;
-            return t;
-
+			i++;
 		}
-		
-		default:
-			printf("Caracter invalido: %c ", c);
-			return (Token){TOKEN_EOF, "",line};
-		}
+		lexeme[i] = '\0';
+		pos++;
 
+		Token t;
+		t.type = TOKEN_STRING;
+		strcpy(t.lexeme, lexeme);
+		t.line = line;
+		return t;
+	}
 
+	default:
+		printf("Caracter invalido: %c ", c);
+		return (Token){TOKEN_EOF, "", line};
+	}
 }
-
