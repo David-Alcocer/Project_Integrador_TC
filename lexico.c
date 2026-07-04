@@ -19,6 +19,32 @@ Token getNextToken()
 	if(input[pos] == '\0')
 		return (Token){TOKEN_EOF, "", line};
 		
+	if(isalpha(input[pos]) || input[pos] == '_')
+		{
+			while(isalnum(input[pos]) || input[pos] == '_')
+				pos++;
+
+				return (Token){TOKEN_ID, 0};
+		}
+	if (input[pos] == '"')
+	{
+		pos++;
+
+		while(input[pos] != '"' && input[pos] != '\0')
+		pos++;
+
+		if(input[pos] == '"')
+		pos++;
+
+		else{
+
+			printf("ERROR: Cadena sin cerrar\n");
+			return (Token){TOKEN_EOF, 0};
+		}
+		
+		return (Token){TOKEN_STRING, 0};
+		
+	}
 	if(isdigit(input[pos]))
 		{
 			int value = 0;

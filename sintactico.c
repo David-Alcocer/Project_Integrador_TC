@@ -24,6 +24,8 @@ void EPrime();
 void T();
 void TPrime();
 void F();
+void Condicion();
+void Relop();
 
 void E()
 {
@@ -71,9 +73,18 @@ void TPrime()
 
 void F()
 {
-	if(current.type == TOKEN_NUMBER)
+	if(current.type == TOKEN_ID)
+	{
+		match(TOKEN_ID);
+	}
+	else if(current.type == TOKEN_NUMBER)
 	{
 		match(TOKEN_NUMBER);
+	}
+
+	else if(current.type == TOKEN_STRING)
+	{
+		match(TOKEN_STRING);
 	}
 	else if(current.type == TOKEN_LPAREN)
 	{
@@ -87,6 +98,33 @@ void F()
 	{
 		error();
 	}
+}
+
+void Relop()
+{
+	if(current.type == TOKEN_LT)
+	{
+		match(TOKEN_LT);
+	}
+	else if(current.type == TOKEN_GT)
+	{
+		match(TOKEN_GT);
+	}
+	else if(current.type == TOKEN_EQ)
+	{
+		match(TOKEN_EQ);
+	}
+	else
+	{
+		error();
+	}
+}
+
+void Condicion()
+{
+	E();
+	Relop();
+	E();
 }
 
 void parse()
