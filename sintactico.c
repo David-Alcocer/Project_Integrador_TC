@@ -58,3 +58,26 @@ void sentencia()
 		error();
 	}
 }
+void asignacion(){
+	match(TOKEN_ID);
+	match(TOKEN_ASSIGN);
+	expresiones();
+	match(TOKEN_SEMICOLON);
+}
+
+void sentencia_print(){
+
+	match(TOKEN_PRINT);
+	match(TOKEN_LPAREN);
+	expresiones();
+	match(TOKEN_RPAREN);
+	match(TOKEN_SEMICOLON);
+}
+
+void sentencia_if(){
+
+}
+
+void sentencia_while(){
+	
+}
