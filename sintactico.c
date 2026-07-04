@@ -19,65 +19,122 @@ void match(TokenType expected)
 		error();
 }
 
-void programa()
+void E();
+void EPrime();
+void T();
+void TPrime();
+void F();
+void Condicion();
+void Relop();
+
+void E()
 {
-	match(TOKEN_BEGIN);
-	lista_sentencias();
-	match(TOKEN_END);
+	T();
+	EPrime();
 }
 
-void lista_sentencias()
+void EPrime()
 {
-	while(current.type == TOKEN_ID||current.type == TOKEN_IF || 
-		current.type == TOKEN_WHILE|| current.type == TOKEN_PRINT)
+	if(current.type == TOKEN_PLUS)
 	{
-		sentencia();
+		match(TOKEN_PLUS);
+		T();
+		EPrime();
+	}
+	else if(current.type == TOKEN_MINUS)
+	{
+		match(TOKEN_MINUS);
+		T();
+		EPrime();
 	}
 }
 
-void sentencia()
+void T()
 {
-	switch(current.type){
-		case TOKEN_ID:
-		asignacion();
-		break;
+	F();
+	TPrime();
+}
 
-		case TOKEN_IF:
-		sentencia_if();
-		break;
+void TPrime()
+{
+	if(current.type == TOKEN_MULT)
+	{
+		match(TOKEN_MULT);
+		F();
+		TPrime();
+	}
+	else if(current.type == TOKEN_DIV)
+	{
+		match(TOKEN_DIV);
+		F();
+		TPrime();
+	}
+}
 
-		case TOKEN_WHILE:
-		sentencia_while();
-		break;
+void F()
+{
+	if(current.type == TOKEN_ID)
+	{
+		match(TOKEN_ID);
+	}
+	else if(current.type == TOKEN_NUMBER)
+	{
+		match(TOKEN_NUMBER);
+	}
 
-		case TOKEN_PRINT:
-	    sentencia_print();
-		break;
-
-		default:
+	else if(current.type == TOKEN_STRING)
+	{
+		match(TOKEN_STRING);
+	}
+	else if(current.type == TOKEN_LPAREN)
+	{
+		match(TOKEN_LPAREN);
+		
+		E();
+		
+		match(TOKEN_RPAREN);
+	}
+	else
+	{
 		error();
 	}
 }
-void asignacion(){
-	match(TOKEN_ID);
-	match(TOKEN_ASSIGN);
-	expresiones();
-	match(TOKEN_SEMICOLON);
+
+void Relop()
+{
+	if(current.type == TOKEN_LT)
+	{
+		match(TOKEN_LT);
+	}
+	else if(current.type == TOKEN_GT)
+	{
+		match(TOKEN_GT);
+	}
+	else if(current.type == TOKEN_EQ)
+	{
+		match(TOKEN_EQ);
+	}
+	else
+	{
+		error();
+	}
 }
 
-void sentencia_print(){
-
-	match(TOKEN_PRINT);
-	match(TOKEN_LPAREN);
-	expresiones();
-	match(TOKEN_RPAREN);
-	match(TOKEN_SEMICOLON);
+void Condicion()
+{
+	E();
+	Relop();
+	E();
 }
 
-void sentencia_if(){
-
-}
-
-void sentencia_while(){
+void parse()
+{
+	current = getNextToken();
 	
+	E();
+	
+	if(current.type == TOKEN_EOF)
+		printf("Cadena valida\n");
+	else
+		error();
 }

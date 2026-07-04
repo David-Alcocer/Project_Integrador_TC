@@ -1,32 +1,14 @@
 #include <stdio.h>
 #include <ctype.h>
 #include <string.h>
-#include <stdlib.h>
 #include "lexico.h"
 
 char *input;
 int pos = 0;
 int line = 1;
-void setInput(FILE *f)
-{
-	fseek(f, 0, SEEK_END);
-	long size = ftell(f);
-	fseek(f, 0, SEEK_SET);
-
-	input = (char *) malloc(size + 1);
-	fread(input, 1, size, f);
-	input[size]= '\0';
-
-	pos = 0;
-	line = 1;
-}
 
 Token getNextToken()
 {
-	Token t;
-	char lexeme[64];
-	int i;
-
 	while(input[pos] == ' '){
 		pos++;
 	}
@@ -34,48 +16,77 @@ Token getNextToken()
 		pos++;
 		line++;
 	}
-
 	if(input[pos] == '\0')
 		return (Token){TOKEN_EOF, "", line};
 		
+	if(isalpha(input[pos]) || input[pos] == '_')
+		{
+			while(isalnum(input[pos]) || input[pos] == '_')
+				pos++;
+
+				return (Token){TOKEN_ID, 0};
+		}
+	if (input[pos] == '"')
+	{
+		pos++;
+
+		while(input[pos] != '"' && input[pos] != '\0')
+		pos++;
+
+		if(input[pos] == '"')
+		pos++;
+
+		else{
+
+			printf("ERROR: Cadena sin cerrar\n");
+			return (Token){TOKEN_EOF, 0};
+		}
+		
+		return (Token){TOKEN_STRING, 0};
+		
+	}
 	if(isdigit(input[pos]))
 		{
-			i= 0;
+			int value = 0;
 			
 			while(isdigit(input[pos]))
 			{
-
-				lexeme[i++] = input[pos++];
+				value = value * 10 + (input[pos] - '0');
+				pos++;
 			}
-				lexeme[i]= '\0';
-
-			 t.type = TOKEN_NUMBER;
-			 strcpy(t.lexeme, lexeme);
-			 t.line = line;
-			 return t;
+			
+			return (Token){TOKEN_NUMBER,"", line};
 		}
+		if(isalpha(input[pos]) || input[pos] == '_'){
+			char lexeme[64];
 		
-        if(isalpha(input[pos]) || input[pos] == '_')
-		{
-			i= 0;
-			while(isalnum(input[pos])|| input[pos] == '_'){
-				lexeme[i++] = input[pos++];
-			}
-			lexeme[i]= '\0';
-			TokenType type = TOKEN_ID;
+		int i = 0;
 
-			if(strcmp(lexeme, "begin") == 0) type = TOKEN_BEGIN;
-				else if(strcmp(lexeme, "end") == 0) type = TOKEN_END;
-				else if(strcmp(lexeme, "if") == 0) type = TOKEN_IF;
-				else if(strcmp(lexeme, "else") == 0) type = TOKEN_ELSE;
-				else if(strcmp(lexeme, "while") == 0) type = TOKEN_WHILE;
-				else if(strcmp(lexeme, "print") == 0) type = TOKEN_PRINT;
-            t.type = type;
-			strcpy(t.lexeme, lexeme);
-			t.line = line;
-				return t;
+		while(isalnum(input[pos])){ //isalnum -> si la función del lenguaje es alfanúmerico 
+			lexeme[i] = input[pos];
+			i++;
+			pos++;
 		}
+		lexeme[i] = '\0';
 
+		TokenType type = TOKEN_ID;
+
+		if(strcmp(lexeme, "begin") == 0) type = TOKEN_BEGIN;
+		else if(strcmp(lexeme, "end") == 0) type = TOKEN_END;
+		else if(strcmp(lexeme, "if") == 0) type = TOKEN_IF;
+		else if(strcmp(lexeme, "else") == 0) type = TOKEN_ELSE;
+		else if(strcmp(lexeme, "while") == 0) type = TOKEN_WHILE;
+		else if(strcmp(lexeme, "print") == 0) type = TOKEN_PRINT;
+
+		Token t;
+		t.type = type;
+		strcpy(t.lexeme, lexeme);
+		t.line = line;
+		return t;
+
+	}
+
+		
 		char c = input[pos++];
 		
 		switch(c)
@@ -106,30 +117,26 @@ Token getNextToken()
 			int i = 0;
 
 			while(input[pos] != '"' && input[pos] != '\0'){
-				if(i < 63){
-					lexeme[i] = input[pos];
-				}
+				lexeme[i] = input[pos];
 				pos++;
 				i++;
 			}
 
 			lexeme[i] = '\0';
-
-			if (input[pos]== '"') {
-				pos++;
+			pos++;
+			Token t;
             t.type = TOKEN_STRING;
             strcpy(t.lexeme, lexeme);
             t.line = line;
             return t;
-			}else {
-				printf("Error lexico encontado en la linea %d", line);
-				return (Token){TOKEN_EOF, "", line};
-			}
+
 		}
 		
 		default:
 			printf("Caracter invalido: %c ", c);
 			return (Token){TOKEN_EOF, "",line};
 		}
+
+
 }
 
