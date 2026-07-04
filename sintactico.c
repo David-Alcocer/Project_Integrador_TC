@@ -7,7 +7,7 @@ Token current;
 
 void error()
 {
-	printf("Error sintactico\n");
+	printf("Error sintactico en la linea %d\n", current.line);
 	exit(1);
 }
 
@@ -232,7 +232,7 @@ void parse()
 	programa();
 
 	if (current.type == TOKEN_EOF)
-		printf("Programa valido\n");
+		printf("Programa correcto\n");
 	else
 		error();
 }
