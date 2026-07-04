@@ -1,45 +1,17 @@
 #ifndef PARSER_H
 #define PARSER_H
+#include "lexico.h"
 
+extern Token current;
 
-/*
+void programa();
+void lista_sentencias();
+void sentencia();
 
-Paso 1: GLC
-
-E -> E + E
-E -> E * E
-E -> (E)
-E -> num
-
-Paso 2: Eliminar ambiguedad
-
-E -> E + T
-E -> T
-
-T -> T * F
-T -> F
-
-F -> (E)
-F -> num
-
-Paso 3: Eliminar recursividad izquierda
-
-
-E  -> T E'
-E' -> + T E' | - T E' | e
-
-T  -> F T'
-T' -> * F T' | / F T' | e
-
-F  -> (E) | num
-
-
-
-
-*/
-
-
-
-void parse();
-
+void match(TokenType expexted);
+void error();
+void asignacion();
+void sentencia_if();
+void sentencia_while();
+void sentencia_print();
 #endif

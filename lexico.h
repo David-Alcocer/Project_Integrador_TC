@@ -41,7 +41,7 @@ typedef struct {
 
 extern char *input;
 extern int pos;
-
+extern int line;
 Token getNextToken();
 
 #endif
