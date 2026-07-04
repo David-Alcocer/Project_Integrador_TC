@@ -10,4 +10,8 @@ void sentencia();
 
 void match(TokenType expexted);
 void error();
+void asignacion();
+void sentencia_if();
+void sentencia_while();
+void sentencia_print();
 #endif
