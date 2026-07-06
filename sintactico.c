@@ -1,7 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "lexico.h"
 #include "sintactico.h"
+#include "generador.h"
 
 Token current;
 
@@ -44,12 +46,14 @@ void EPrime()
 {
 	if (current.type == TOKEN_PLUS)
 	{
+		fprintf(salida, " + ");
 		match(TOKEN_PLUS);
 		T();
 		EPrime();
 	}
 	else if (current.type == TOKEN_MINUS)
 	{
+		fprintf(salida, " - ");
 		match(TOKEN_MINUS);
 		T();
 		EPrime();
@@ -66,12 +70,14 @@ void TPrime()
 {
 	if (current.type == TOKEN_MULT)
 	{
+		fprintf(salida, " * ");
 		match(TOKEN_MULT);
 		F();
 		TPrime();
 	}
 	else if (current.type == TOKEN_DIV)
 	{
+		fprintf(salida, " / ");
 		match(TOKEN_DIV);
 		F();
 		TPrime();
@@ -82,23 +88,26 @@ void F()
 {
 	if (current.type == TOKEN_ID)
 	{
+		fprintf(salida, "%s", current.lexeme);
 		match(TOKEN_ID);
 	}
 	else if (current.type == TOKEN_NUMBER)
 	{
+        fprintf(salida, "%s", current.lexeme);
 		match(TOKEN_NUMBER);
 	}
 
 	else if (current.type == TOKEN_STRING)
 	{
+		fprintf(salida, "\"%s\"", current.lexeme);
 		match(TOKEN_STRING);
 	}
 	else if (current.type == TOKEN_LPAREN)
 	{
+		fprintf(salida, "(");
 		match(TOKEN_LPAREN);
-
 		E();
-
+		fprintf(salida, ")"); 
 		match(TOKEN_RPAREN);
 	}
 	else
@@ -180,17 +189,26 @@ void sentencia()
 
 void asignacion()
 {
+
+	char nombre[64];
+	strcpy(nombre, current.lexeme);
 	match(TOKEN_ID);
 	match(TOKEN_ASSIGN);
-	E();
+	
+	fprintf(salida, "%s = ", nombre); 
+	E();                             
 	match(TOKEN_SEMICOLON);
+	fprintf(salida, ";\n");
 }
 
 void print_stmt()
 {
 	match(TOKEN_PRINT);
 	match(TOKEN_LPAREN);
+
+	fprintf(salida, "printf(\"%%d\\n\", ");
 	E();
+	fprintf(salida, ");\n");
 	match(TOKEN_RPAREN);
 	match(TOKEN_SEMICOLON);
 }
@@ -227,6 +245,8 @@ void while_stmt()
 
 void parse()
 {
+	iniciar_generador();
+
 	current = getNextToken();
 
 	programa();
@@ -235,4 +255,9 @@ void parse()
 		printf("Programa correcto\n");
 	else
 		error();
+
+	terminar_generador();
+
 }
+
+
