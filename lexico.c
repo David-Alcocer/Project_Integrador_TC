@@ -9,36 +9,46 @@ int line = 1;
 
 Token getNextToken()
 {
-	while(input[pos] == ' '){
+	while (input[pos] == ' ')
+	{
 		pos++;
 	}
-	while(input[pos] == '\n'){
+	while (input[pos] == '\n')
+	{
 		pos++;
 		line++;
 	}
 
-	if(input[pos] == '\0')
+	if (input[pos] == '\0')
 		return (Token){TOKEN_EOF, "", line};
 
-	if(isdigit(input[pos]))
-	{
-		int value = 0;
-
-		while(isdigit(input[pos]))
-		{
-			value = value * 10 + (input[pos] - '0');
-			pos++;
-		}
-
-		return (Token){TOKEN_NUMBER, "", line};
-	}
-
-	if(isalpha(input[pos]) || input[pos] == '_')
+	if (isdigit(input[pos]))
 	{
 		char lexeme[64];
 		int i = 0;
 
-		while(isalnum(input[pos]) || input[pos] == '_')
+		while (isdigit(input[pos]))
+		{
+			lexeme[i] = input[pos];
+			i++;
+			pos++;
+		}
+
+		lexeme[i] = '\0';
+
+		Token t;
+		t.type = TOKEN_NUMBER;
+		strcpy(t.lexeme, lexeme);
+		t.line = line;
+		return t;
+	}
+
+	if (isalpha(input[pos]) || input[pos] == '_')
+	{
+		char lexeme[64];
+		int i = 0;
+
+		while (isalnum(input[pos]) || input[pos] == '_')
 		{
 			lexeme[i] = input[pos];
 			i++;
@@ -48,12 +58,18 @@ Token getNextToken()
 
 		TokenType type = TOKEN_ID;
 
-		if(strcmp(lexeme, "begin") == 0) type = TOKEN_BEGIN;
-		else if(strcmp(lexeme, "end") == 0) type = TOKEN_END;
-		else if(strcmp(lexeme, "if") == 0) type = TOKEN_IF;
-		else if(strcmp(lexeme, "else") == 0) type = TOKEN_ELSE;
-		else if(strcmp(lexeme, "while") == 0) type = TOKEN_WHILE;
-		else if(strcmp(lexeme, "print") == 0) type = TOKEN_PRINT;
+		if (strcmp(lexeme, "begin") == 0)
+			type = TOKEN_BEGIN;
+		else if (strcmp(lexeme, "end") == 0)
+			type = TOKEN_END;
+		else if (strcmp(lexeme, "if") == 0)
+			type = TOKEN_IF;
+		else if (strcmp(lexeme, "else") == 0)
+			type = TOKEN_ELSE;
+		else if (strcmp(lexeme, "while") == 0)
+			type = TOKEN_WHILE;
+		else if (strcmp(lexeme, "print") == 0)
+			type = TOKEN_PRINT;
 
 		Token t;
 		t.type = type;
@@ -64,25 +80,39 @@ Token getNextToken()
 
 	char c = input[pos++];
 
-	switch(c)
+	switch (c)
 	{
-	case '+': return (Token){TOKEN_PLUS, "", line};
-	case '-': return (Token){TOKEN_MINUS, "", line};
-	case '*': return (Token){TOKEN_MULT, "", line};
-	case '/': return (Token){TOKEN_DIV, "", line};
-	case '(': return (Token){TOKEN_LPAREN, "", line};
-	case ')': return (Token){TOKEN_RPAREN, "", line};
-	case '{': return (Token){TOKEN_LBRACE, "", line};
-	case '}': return (Token){TOKEN_RBRACE, "", line};
-	case ';': return (Token){TOKEN_SEMICOLON, "", line};
-	case '<': return (Token){TOKEN_LT, "", line};
-	case '>': return (Token){TOKEN_GT, "", line};
+	case '+':
+		return (Token){TOKEN_PLUS, "", line};
+	case '-':
+		return (Token){TOKEN_MINUS, "", line};
+	case '*':
+		return (Token){TOKEN_MULT, "", line};
+	case '/':
+		return (Token){TOKEN_DIV, "", line};
+	case '(':
+		return (Token){TOKEN_LPAREN, "", line};
+	case ')':
+		return (Token){TOKEN_RPAREN, "", line};
+	case '{':
+		return (Token){TOKEN_LBRACE, "", line};
+	case '}':
+		return (Token){TOKEN_RBRACE, "", line};
+	case ';':
+		return (Token){TOKEN_SEMICOLON, "", line};
+	case '<':
+		return (Token){TOKEN_LT, "", line};
+	case '>':
+		return (Token){TOKEN_GT, "", line};
 
 	case '=':
-		if(input[pos] == '='){
+		if (input[pos] == '=')
+		{
 			pos++;
 			return (Token){TOKEN_EQ, "", line};
-		}else{
+		}
+		else
+		{
 			return (Token){TOKEN_ASSIGN, "", line};
 		}
 
@@ -91,7 +121,8 @@ Token getNextToken()
 		char lexeme[64];
 		int i = 0;
 
-		while(input[pos] != '"' && input[pos] != '\0'){
+		while (input[pos] != '"' && input[pos] != '\0')
+		{
 			lexeme[i] = input[pos];
 			pos++;
 			i++;
