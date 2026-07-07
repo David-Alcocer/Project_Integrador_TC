@@ -1,6 +1,6 @@
 # Generador de código (MiniLang → C)
 
-Fase opcional del proyecto MiniLang. El objetivo es que, además de validar un programa, el compilador lo **traduzca a C equivalente**, lo compile y lo ejecute.
+El objetivo es que, además de validar un programa, el compilador lo **traduzca a C equivalente**, lo compile y lo ejecute.
 
 ---
 
